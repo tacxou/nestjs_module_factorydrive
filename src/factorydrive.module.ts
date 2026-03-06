@@ -1,7 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common'
-import { FactorydriveModuleAsyncOptions } from './factorydrive.interfaces'
+import type { FactorydriveModuleAsyncOptions } from './factorydrive.interfaces'
 import { FactorydriveCoreModule } from './factorydrive.core-module'
-import { StorageManagerConfig } from './factorydrive'
+import type { StorageManagerConfig } from './factorydrive'
 
 @Module({})
 export class FactorydriveModule {

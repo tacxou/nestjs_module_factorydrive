@@ -9,106 +9,237 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/org/The-Software-Compagny"><img src="https://img.shields.io/npm/v/@the-software-compagny/nestjs_module_factorydrive.svg" alt="NPM Version" /></a>
-  <a href="https://www.npmjs.com/org/The-Software-Compagny"><img src="https://img.shields.io/npm/l/@the-software-compagny/nestjs_module_factorydrive.svg" alt="Package License" /></a>
-  <a href="https://github.com/The-Software-Compagny/nestjs_module_rcon/actions/workflows/ci.yml"><img src="https://github.com/The-Software-Compagny/nestjs_module_factorydrive/actions/workflows/ci.yml/badge.svg" alt="Publish Package to npmjs" /></a>
+  <a href="https://www.npmjs.com/org/tacxou"><img src="https://img.shields.io/npm/v/@tacxou/nestjs_module_factorydrive.svg" alt="NPM Version" /></a>
+  <a href="https://www.npmjs.com/org/tacxou"><img src="https://img.shields.io/npm/l/@tacxou/nestjs_module_factorydrive.svg" alt="Package License" /></a>
+  <a href="https://github.com/tacxou/nestjs_module_rcon/actions/workflows/ci.yml"><img src="https://github.com/tacxou/nestjs_module_factorydrive/actions/workflows/ci.yml/badge.svg" alt="Publish Package to npmjs" /></a>
 </p>
 <br>
 
-# NestJS Factory drive Module
-Factory drive module for NestJS Framework
+## `@tacxou/nestjs_module_factorydrive`
 
-## Install dependencies
+`nestjs_module_factorydrive` provides a simple storage abstraction for NestJS:
+- configure one or many disks
+- select a default disk
+- use built-in local filesystem driver
+- register custom drivers (S3, Spaces, etc.)
+
+## Maintained Packages
+
+Current maintained packages in the Factorydrive ecosystem:
+
+- `local`: [`nestjs_module_factorydrive`](https://github.com/tacxou/nestjs_module_factorydrive)
+- `s3`: [`nestjs_module_factorydrive-s3`](https://github.com/tacxou/nestjs_module_factorydrive-s3)
+- `sftp`: [`nestjs_module_factorydrive-sftp`](https://github.com/tacxou/nestjs_module_factorydrive-sftp)
+
+## Requirements
+
+- Node.js `>= 22`
+- Bun `>= 1.0.0` (used for build/test in this repository)
+- NestJS `^6` to `^11` (`@nestjs/common` and `@nestjs/core`)
+
+## Installation
+
 ```bash
-yarn add @the-software-compagny/nestjs_module_factorydrive
+npm install @tacxou/nestjs_module_factorydrive
 ```
-## Instanciate
+
+Or with other package managers:
+
+```bash
+yarn add @tacxou/nestjs_module_factorydrive
+pnpm add @tacxou/nestjs_module_factorydrive
+bun add @tacxou/nestjs_module_factorydrive
+```
+
+## Quick Start (synchronous config)
+
 ```ts
 // app.module.ts
-import { FactorydriveModule, FactorydriveService } from '@the-software-compagny/nestjs_module_factorydrive'
+import { Module } from '@nestjs/common'
+import { FactorydriveModule } from '@tacxou/nestjs_module_factorydrive'
 
 @Module({
   imports: [
-    // ...
-    FactorydriveModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => ({
-        ...config.get('factorydrive.options'),
-      }),
-    }),
-    // ...
-  ],
-})
-export class AppModule {
-  public constructor(storage: FactorydriveService) {
-    // If you want to add a new driver you can use the registerDriver method
-    storage.registerDriver('s3', AwsS3Storage)
-  }
-}
-
-//config.ts
-export default {
-  // ...
-  factorydrive: {
-    options: {
+    FactorydriveModule.forRoot({
       default: 'local',
       disks: {
         local: {
           driver: 'local',
           config: {
-            root: process.cwd() + '/storage',
-          },
-        },
-        s3: {
-          driver: 's3',
-          config: {
-            credentials: {
-              accessKeyId: '******',
-              secretAccessKey: '******',
-            },
-            endpoint: 'http://minio:9000/',
-            region: 'us-east-1',
-            bucket: 'example',
-            forcePathStyle: true,
+            root: `${process.cwd()}/storage`,
           },
         },
       },
-    },
-  },
-  // ...
-}
+    }),
+  ],
+})
+export class AppModule {}
 ```
-## Usage
+
+## Async Configuration (`forRootAsync`)
+
 ```ts
-// filestorage.service.ts
-import { FactorydriveService } from '@the-software-compagny/nestjs_module_factorydrive'
+// app.module.ts
+import { Module } from '@nestjs/common'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { FactorydriveModule } from '@tacxou/nestjs_module_factorydrive'
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    FactorydriveModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        default: config.get<string>('factorydrive.default', 'local'),
+        disks: {
+          local: {
+            driver: 'local',
+            config: {
+              root: config.get<string>('factorydrive.localRoot', `${process.cwd()}/storage`),
+            },
+          },
+        },
+      }),
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+## Usage
+
+Inject `FactorydriveService` and interact with a disk instance:
+
+```ts
+// file-storage.service.ts
+import { Injectable } from '@nestjs/common'
+import { FactorydriveService } from '@tacxou/nestjs_module_factorydrive'
 
 @Injectable()
 export class FileStorageService {
-  public constructor(
-    @InjectFactorydrive() private readonly factorydrive: FactorydriveService,
-  ) {}
+  public constructor(private readonly factorydrive: FactorydriveService) {}
 
-  public async uploadFile(path: string, file: Express.Multer.File): Promise<string> {
-    const res = await this.factorydrive.getDisk('s3').put(path, file.buffer)
-    return res.raw
+  public async uploadFile(path: string, buffer: Buffer): Promise<void> {
+    await this.factorydrive.getDisk('local').put(path, buffer)
   }
 
-  public async deleteFile(path: string): Promise<void> {
-    await this.factorydrive.getDisk('s3').delete(path)
+  public async readFile(path: string): Promise<string> {
+    const { content } = await this.factorydrive.getDisk('local').get(path)
+    return content
   }
 
-  public async moveFile(path: string, target: string): Promise<void> {
-    await this.factorydrive.getDisk('s3').move(path, target)
-  }
-
-  public async copyFile(path: string, target: string): Promise<void> {
-    await this.factorydrive.getDisk('s3').copy(path, target)
-  }
-
-  public async listFiles(path: string): Promise<void> {
-    await this.factorydrive.getDisk('s3').flatList(path)
+  public async deleteFile(path: string): Promise<boolean | null> {
+    const { wasDeleted } = await this.factorydrive.getDisk('local').delete(path)
+    return wasDeleted
   }
 }
 ```
+
+If no disk name is provided, the configured `default` disk is used:
+
+```ts
+const disk = this.factorydrive.getDisk()
+```
+
+## Built-in Local Driver
+
+The package includes a `local` driver with the following operations:
+
+- `append(location, content)`
+- `copy(src, dest)`
+- `delete(location)`
+- `exists(location)`
+- `get(location, encoding?)`
+- `getBuffer(location)`
+- `getStat(location)`
+- `getStream(location)`
+- `move(src, dest)`
+- `prepend(location, content)`
+- `put(location, content)`
+- `flatList(prefix?)`
+
+`content` for `put` accepts `Buffer | ReadableStream | string`.
+
+## Register a Custom Driver
+
+Custom drivers must extend `AbstractStorage` and implement the methods you need.
+
+```ts
+// aws-s3.storage.ts
+import { AbstractStorage, DeleteResponse, Response } from '@tacxou/nestjs_module_factorydrive'
+
+export class AwsS3Storage extends AbstractStorage {
+  public constructor(private readonly config: { bucket: string }) {
+    super()
+  }
+
+  public async put(location: string, content: Buffer | NodeJS.ReadableStream | string): Promise<Response> {
+    // Upload implementation...
+    return { raw: { location, uploaded: true, contentType: typeof content } }
+  }
+
+  public async delete(location: string): Promise<DeleteResponse> {
+    // Delete implementation...
+    return { raw: { location }, wasDeleted: true }
+  }
+}
+```
+
+Then register it at startup:
+
+```ts
+// app.module.ts
+import { Module, OnModuleInit } from '@nestjs/common'
+import { FactorydriveModule, FactorydriveService } from '@tacxou/nestjs_module_factorydrive'
+import { AwsS3Storage } from './aws-s3.storage'
+
+@Module({
+  imports: [
+    FactorydriveModule.forRoot({
+      default: 's3',
+      disks: {
+        s3: {
+          driver: 's3',
+          config: {
+            bucket: 'example',
+          },
+        },
+      },
+    }),
+  ],
+})
+export class AppModule implements OnModuleInit {
+  public constructor(private readonly factorydrive: FactorydriveService) {}
+
+  public onModuleInit(): void {
+    this.factorydrive.registerDriver('s3', AwsS3Storage)
+  }
+}
+```
+
+## Exported API
+
+Main exports from this package:
+
+- `FactorydriveModule`
+- `FactorydriveService`
+- `AbstractStorage`
+- `StorageManager`
+- storage config/types from `factorydrive/types`
+- exceptions from `exceptions`
+
+## Error Handling
+
+The module provides dedicated exceptions (for example):
+- `InvalidConfigException`
+- `DriverNotSupportedException`
+- `FileNotFoundException`
+- `PermissionMissingException`
+- `MethodNotSupportedException`
+
+Catch and map them in your service/controller layers as needed.
+
+## License
+
+MIT

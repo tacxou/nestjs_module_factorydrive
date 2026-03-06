@@ -1,8 +1,8 @@
 import { DynamicModule, Global, Module, Provider, Type } from '@nestjs/common'
 import { FactorydriveService } from './factorydrive.service'
 import { FACTORYDRIVE_MODULE_OPTIONS_TOKEN } from './factorydrive.constants'
-import { FactorydriveModuleAsyncOptions, FactorydriveModuleOptionsFactory } from './factorydrive.interfaces'
-import { StorageManagerConfig } from './factorydrive'
+import type { FactorydriveModuleAsyncOptions, FactorydriveModuleOptionsFactory } from './factorydrive.interfaces'
+import type { StorageManagerConfig } from './factorydrive'
 
 @Global()
 @Module({})

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { AbstractStorage, StorageManager, StorageManagerConfig } from './factorydrive'
+import { AbstractStorage, StorageManager } from './factorydrive'
+import type { StorageManagerConfig } from './factorydrive'
 import { FACTORYDRIVE_MODULE_OPTIONS_TOKEN } from './factorydrive.constants'
 
 @Injectable()

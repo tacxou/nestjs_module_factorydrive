@@ -1,7 +1,7 @@
 import { LocalFileSystemStorage } from './local-file-system.storage'
 import AbstractStorage from './abstract.storage'
 import { DriverNotSupportedException, InvalidConfigException } from '../exceptions'
-import { StorageManagerConfig, StorageManagerDiskConfig, StorageManagerSingleDiskConfig } from './types'
+import type { StorageManagerConfig, StorageManagerDiskConfig, StorageManagerSingleDiskConfig } from './types'
 import { Logger } from '@nestjs/common'
 
 interface StorageConstructor<T extends AbstractStorage = AbstractStorage> {

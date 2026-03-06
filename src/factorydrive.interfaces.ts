@@ -1,5 +1,5 @@
 import { ModuleMetadata, Type } from '@nestjs/common'
-import { StorageManagerConfig } from './factorydrive'
+import type { StorageManagerConfig } from './factorydrive'
 
 export interface FactorydriveModuleOptionsFactory {
   createFactorydriveModuleOptions(): Promise<StorageManagerConfig> | StorageManagerConfig
