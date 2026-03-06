@@ -27,7 +27,7 @@
 
 Current maintained packages in the Factorydrive ecosystem:
 
-- `local`: [`nestjs_module_factorydrive`](https://github.com/tacxou/nestjs_module_factorydrive)
+- `local`: [`nestjs_module_factorydrive`](https://github.com/tacxou/nestjs_module_factorydrive/blob/main/src/factorydrive/local-file-system.storage.ts)
 - `s3`: [`nestjs_module_factorydrive-s3`](https://github.com/tacxou/nestjs_module_factorydrive-s3)
 - `sftp`: [`nestjs_module_factorydrive-sftp`](https://github.com/tacxou/nestjs_module_factorydrive-sftp)
 
