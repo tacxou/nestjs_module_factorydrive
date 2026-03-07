@@ -1,6 +1,6 @@
 {
   "name": "@tacxou/nestjs_module_factorydrive",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "Factory drive module for NestJS framework",
   "repository": "https://github.com/tacxou/nestjs_module_factorydrive.git",
   "author": "tacxou <12997062+tacxou@users.noreply.github.com> (https://github.com/tacxou)",
