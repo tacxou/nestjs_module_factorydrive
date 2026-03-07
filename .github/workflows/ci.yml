@@ -35,7 +35,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: tacxou/nestjs_module_rcon
+          slug: tacxou/nestjs_module_factorydrive
           files: ./coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
