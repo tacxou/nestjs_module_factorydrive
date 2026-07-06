@@ -2,7 +2,7 @@
 // noinspection JSUnusedGlobalSymbols
 
 import { MethodNotSupportedException } from '../exceptions'
-import { ContentResponse, DeleteResponse, ExistsResponse, FileListResponse, Response, SignedUrlOptions, SignedUrlResponse, StatResponse } from './types'
+import { ContentResponse, DeleteResponse, ExistsResponse, FileListResponse, Response, SignedUrlOptions, SignedUrlResponse, StatResponse, VerifySignedUrlParams } from './types'
 
 export default abstract class AbstractStorage {
   public constructor() {
@@ -46,6 +46,10 @@ export default abstract class AbstractStorage {
 
   public getSignedUrl(_location: string, _options?: SignedUrlOptions): Promise<SignedUrlResponse> {
     throw new MethodNotSupportedException('getSignedUrl', this.constructor.name)
+  }
+
+  public verifySignedUrl(_location: string, _params: VerifySignedUrlParams): boolean {
+    throw new MethodNotSupportedException('verifySignedUrl', this.constructor.name)
   }
 
   public getStat(_location: string): Promise<StatResponse> {

@@ -160,8 +160,39 @@ The package includes a `local` driver with the following operations:
 - `prepend(location, content)`
 - `put(location, content)`
 - `flatList(prefix?)`
+- `getUrl(location)` — unsigned URL built from the disk `baseUrl`
+- `getSignedUrl(location, { expiresIn? })` — time-limited HMAC-signed URL (default `expiresIn = 900`)
+- `verifySignedUrl(location, { expires, signature })` — constant-time signature + expiry check
 
 `content` for `put` accepts `Buffer | ReadableStream | string`.
+
+### Signed URLs (local)
+
+The local driver has no HTTP server: `getSignedUrl` returns a URL pointing at a `baseUrl` endpoint
+that **you** expose and which must call `verifySignedUrl` before streaming the file. Configure the
+disk with a `signatureSecret` and a `baseUrl`:
+
+```ts
+disks: {
+  local: {
+    driver: 'local',
+    config: {
+      root: '/var/data',
+      signatureSecret: process.env.STORAGE_URL_SECRET,
+      baseUrl: 'https://api.example.com/files',
+    },
+  },
+}
+
+const { signedUrl } = await storage.getSignedUrl('threads/abc', { expiresIn: 3600 })
+// -> https://api.example.com/files/threads/abc?expires=...&signature=...
+
+// in the /files endpoint:
+const ok = storage.verifySignedUrl('threads/abc', { expires, signature })
+```
+
+Both `signatureSecret` and `baseUrl` are required for signing; otherwise `getSignedUrl` throws
+`InvalidConfigException`.
 
 ## Register a Custom Driver
 

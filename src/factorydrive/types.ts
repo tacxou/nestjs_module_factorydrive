@@ -42,6 +42,11 @@ export interface SignedUrlResponse extends Response {
   signedUrl: string
 }
 
+export interface VerifySignedUrlParams {
+  expires: number
+  signature: string
+}
+
 export interface StatResponse extends Response {
   size: number
   modified: Date
