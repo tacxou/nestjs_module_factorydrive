@@ -1,0 +1,38 @@
+---
+description: Messages de commit Conventional Commits (NestJS Factorydrive Module)
+alwaysApply: true
+---
+
+# Conventional Commits
+
+Référence complète : `docs/conventions/conventional-commits.md`.
+
+## Format obligatoire
+
+```
+<type>(<scope>): <description impérative en anglais, ≤ 72 car., sans point final>
+```
+
+Types : `feat` · `fix` · `docs` · `style` · `refactor` · `perf` · `test` · `build` · `ci` · `chore` · `revert`
+
+Scopes : `src` · `tests` · `s3` · `deps` · `ci` · `root` (ou omis si transversal)
+
+Breaking : `type(scope)!:` ou pied `BREAKING CHANGE:`.
+
+## SemVer stricte
+
+Versions `MAJOR.MINOR.PATCH` uniquement ([SemVer 2.0.0](https://semver.org/)). Bump : `fix` → PATCH, `feat` → MINOR, breaking → MAJOR ; `docs`/`chore`/… → aucun bump. Signaler le bump attendu si pertinent (package principal et/ou S3).
+
+## Comportement agent
+
+- Proposer le message ; ne pas committer/pousser sans demande explicite.
+- Un commit = une intention ; pas de `WIP` ni sujets vagues (`update`, `fix stuff`).
+- Corps optionnel pour le *pourquoi* ; pied `Refs: #N` / `Closes: #N` si issue liée.
+
+## Exemples
+
+```
+feat(src): add custom driver registration helper
+fix(src): await stream close in local storage put
+docs(root): add forRootAsync usage to README
+```

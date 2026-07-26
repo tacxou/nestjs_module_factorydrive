@@ -1,0 +1,16 @@
+---
+description: Workflow spec-driven (spec-kit lean) pour les features Factorydrive
+globs:
+  - specs/**
+alwaysApply: false
+---
+
+# Spec-driven development
+
+1. Créer `specs/NNN-feature-name/spec.md` avec user stories P1/P2 et scénarios Given/When/Then.
+2. Dériver `plan.md` (approche technique, fichiers touchés, risques API/SemVer).
+3. Dériver `tasks.md` (checklist ordonnée, tests inclus).
+4. Implémenter tâche par tâche en respectant `CLAUDE.md` et l'API publique via `src/index.ts`.
+
+La spec est la source de vérité. Signaler tout bump SemVer (breaking / feat) avant merge.
+Voir `.agents/skills/spec-driven/SKILL.md`.

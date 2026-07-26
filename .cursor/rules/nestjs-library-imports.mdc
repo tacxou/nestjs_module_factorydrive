@@ -1,0 +1,22 @@
+---
+description: Imports NestJS — DI et décorateurs en import valeur, pas import type
+globs: src/**/*
+alwaysApply: false
+---
+
+# Imports `src/` (NestJS)
+
+`emitDecoratorMetadata` est activé dans `tsconfig.json`.
+
+## Pourquoi
+
+NestJS s'appuie sur `emitDecoratorMetadata` : les classes injectées (`FactorydriveService`,
+`StorageManager` dans le constructeur) et les symboles passés aux décorateurs (`@Inject()`,
+`@Module()`) doivent exister **au runtime**. Un `import type` les efface à la compilation et casse la DI.
+
+## Règles
+
+- **Garder** `import { FactorydriveService }`, `import { Module }`, `import { Inject }`, etc. (import valeur).
+- **Utiliser** `import type` seulement pour de purs types sans décorateur ni métadonnées
+  (ex. `FactorydriveModuleAsyncOptions`, `StorageManagerConfig`).
+- Ne pas convertir en `import type` les symboles référencés par des décorateurs Nest ou injectés via DI.

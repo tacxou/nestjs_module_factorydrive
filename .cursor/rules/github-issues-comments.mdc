@@ -1,0 +1,64 @@
+---
+description: Rédiger les commentaires GitHub dans .issues/ (cache local, gitignored)
+alwaysApply: true
+---
+
+# Commentaires d'issues GitHub
+
+Quand l'utilisateur demande de rédiger, préparer ou commenter une issue GitHub :
+
+## Où écrire
+
+- Écrire le commentaire dans `.issues/{numero}.md` à la racine du dépôt.
+- Exemple : issue #20 → `.issues/20.md`
+- Ne **jamais** publier le commentaire automatiquement (`gh issue comment`, API GitHub, etc.) sauf demande explicite.
+
+## Contenu du fichier
+
+- Markdown prêt à copier-coller sur GitHub — **commentaire de progression**, pas un doc de planification.
+- Langue : français (sauf demande contraire).
+- Rédiger au passé / présent : ce qui a été livré, fichiers modifiés, décisions prises si pertinent.
+- Éviter : « prochaines étapes », « hors scope », checklists de suivi, sections meta sur l'issue elle-même — sauf demande explicite.
+
+## Liste des commits
+
+Quand l'issue porte sur une livraison technique (feature, fix, config…), inclure une section **`Commits`** après les puces de contenu et **avant** la ligne `Décision :`.
+
+**Structure type**
+
+1. Intro — date de livraison + périmètre (`src/`, `tests/`, `packages/…`…), **sans** lister les hash inline.
+2. Puces — ce qui a été livré (fichiers, modules, décisions techniques).
+3. Table **`Commits`** — un commit pertinent par ligne.
+4. `Décision :` — une ou deux décisions structurantes (optionnel si rien de notable).
+
+**Table Markdown**
+
+```markdown
+**Commits**
+
+| Hash | Date | Contenu |
+|------|------|---------|
+| `abc1234` | JJ/MM | Résumé court de ce que le commit apporte à l'issue |
+```
+
+- **Hash** : identifiant court Git (7 caractères), entre backticks.
+- **Date** : `JJ/MM` (année dans l'intro si utile).
+- **Contenu** : une phrase — périmètre touché, pas le message de commit brut.
+
+**Règles de sélection**
+
+- S'appuyer sur `git log` filtré sur les chemins concernés par l'issue (ex. `src/`, `tests/`).
+- Ne retenir que les commits **dans le périmètre et la période** de l'issue ; exclure le travail postérieur ou hors sujet.
+- Ne pas référencer de fichiers ou composants **non commités** (vérifier avec `git log -- <chemin>`).
+- Regrouper ou omettre les commits triviaux (deps mineures, typo) si la table devient illisible ; garder ceux qui structurent la livraison.
+- Ne pas dupliquer les hash dans les puces : la table fait foi pour la traçabilité Git.
+
+## Cache local uniquement
+
+- `.issues/` contient un `.gitignore` qui ignore tout sauf lui-même : le dossier existe au clone, les brouillons restent locaux.
+- Le développeur copie-colle le contenu sur GitHub ou publie lui-même via `gh issue comment`.
+
+## Interdits
+
+- Ne pas committer les brouillons sous `.issues/` (seul `.issues/.gitignore` est versionné).
+- Ne pas créer de PR ou commentaire GitHub sans demande explicite.

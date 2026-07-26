@@ -5,6 +5,18 @@
 !src/**
 !tests/
 !tests/**
+!docs/
+!docs/**
+!.agents/
+!.agents/**
+!.cursor/
+!.cursor/**
+!.issues/
+!.issues/.gitignore
+!specs/
+!specs/**
+!samples/
+!samples/.gitignore
 
 !.gitignore
 !.gitattributes
@@ -13,11 +25,14 @@
 !.prettierignore
 !.eslintrc.js
 !.editorconfig
-!.tsconfig.json
-!.tsconfig.build.json
+!.cursorrules
+!tsconfig.json
+!tsconfig.build.json
 !package.json
 !Makefile
 !README.md
 !SECURITY.md
 !LICENSE
+!AGENTS.md
+!CLAUDE.md
 !bun.lock*
