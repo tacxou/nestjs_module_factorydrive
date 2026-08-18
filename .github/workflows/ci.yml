@@ -59,3 +59,11 @@ jobs:
 
       - name: Build project
         run: bun run build
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Smoke test dist/ under Node (catches ESM/CJS interop breakage bun test cannot see)
+        run: node tests/dist-node-smoke.mjs

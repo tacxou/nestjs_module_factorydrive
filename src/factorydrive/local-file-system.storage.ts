@@ -1,5 +1,5 @@
 import { createHmac, timingSafeEqual } from 'crypto'
-import * as fse from 'fs-extra'
+import fse from 'fs-extra'
 import { promises as fs } from 'fs'
 import { dirname, join, relative, resolve, sep } from 'path'
 import AbstractStorage from './abstract.storage'
