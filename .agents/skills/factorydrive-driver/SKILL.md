@@ -3,7 +3,9 @@ name: factorydrive-driver
 description: >-
   Guide l'ajout ou l'extension d'un driver de stockage Factorydrive (AbstractStorage,
   enregistrement StorageManager, package satellite npm). Utiliser quand l'utilisateur
-  parle de driver, disk, S3, local storage, Spaces, custom storage, ou AbstractStorage.
+  demande de créer, implémenter ou étendre un driver AbstractStorage, un provider custom
+  ou un package driver satellite. Pour configurer ou consommer un driver existant dans
+  une application NestJS, utiliser le skill use-factorydrive.
 ---
 
 # factorydrive-driver — Ajouter / étendre un driver

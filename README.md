@@ -39,6 +39,27 @@ Current maintained packages in the Factorydrive ecosystem:
 - Bun `>= 1.0.0` (used for build/test in this repository)
 - NestJS `^6` to `^11` (`@nestjs/common` and `@nestjs/core`)
 
+## Architecture and Portability
+
+Application and business services should depend on `FactorydriveService`, not on a
+physical storage provider. Keep filesystem roots, buckets, endpoints, credentials, and
+driver selection in module configuration so the same business code can use local, S3,
+or SFTP storage.
+
+```text
+Business service
+      |
+FactorydriveService
+      |
+AbstractStorage
+  /      |      \
+local    S3     SFTP
+```
+
+For application storage, avoid importing `node:fs`, `S3Client`, or an SFTP client into
+business services. Provider-specific SDKs belong inside Factorydrive drivers or narrowly
+justified infrastructure code.
+
 ## Installation
 
 ```bash
@@ -123,25 +144,32 @@ export class FileStorageService {
   public constructor(private readonly factorydrive: FactorydriveService) {}
 
   public async uploadFile(path: string, buffer: Buffer): Promise<void> {
-    await this.factorydrive.getDisk('local').put(path, buffer)
+    await this.factorydrive.getDisk().put(path, buffer)
   }
 
   public async readFile(path: string): Promise<string> {
-    const { content } = await this.factorydrive.getDisk('local').get(path)
+    const { content } = await this.factorydrive.getDisk().get(path)
     return content
   }
 
   public async deleteFile(path: string): Promise<boolean | null> {
-    const { wasDeleted } = await this.factorydrive.getDisk('local').delete(path)
+    const { wasDeleted } = await this.factorydrive.getDisk().delete(path)
     return wasDeleted
   }
 }
 ```
 
-If no disk name is provided, the configured `default` disk is used:
+If no disk name is provided, the configured `default` disk is used. Prefer this form so
+business code remains portable across storage providers:
 
 ```ts
 const disk = this.factorydrive.getDisk()
+```
+
+Select a named disk only when the use case intentionally targets it:
+
+```ts
+const archive = this.factorydrive.getDisk('archive')
 ```
 
 ## Built-in Local Driver
@@ -272,6 +300,23 @@ The module provides dedicated exceptions (for example):
 - `MethodNotSupportedException`
 
 Catch and map them in your service/controller layers as needed.
+
+## AI Agent Skill
+
+This repository includes an English [`use-factorydrive`](.agents/skills/use-factorydrive/SKILL.md)
+skill for Codex and compatible coding agents. It teaches agents to explain, configure,
+audit, and implement Factorydrive without coupling business code to a storage provider.
+
+Example prompts:
+
+```text
+Use $use-factorydrive to configure local document storage in this NestJS application.
+Use $use-factorydrive to migrate this service from S3Client to FactorydriveService.
+Use $use-factorydrive to expose a verified local signed-download endpoint.
+```
+
+Driver authors should use the separate
+[`factorydrive-driver`](.agents/skills/factorydrive-driver/SKILL.md) skill.
 
 ## License
 

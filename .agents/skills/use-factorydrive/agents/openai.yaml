@@ -1,0 +1,4 @@
+interface:
+  display_name: "Use Factorydrive"
+  short_description: "Configure portable storage in NestJS"
+  default_prompt: "Use $use-factorydrive to integrate portable file storage into this NestJS application."

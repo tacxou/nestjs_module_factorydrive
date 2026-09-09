@@ -59,6 +59,7 @@ Les workflows réutilisables vivent dans [`.agents/skills/`](.agents/skills/) :
 | `github-release` | Préparer une release npm (bump, notes, commandes) |
 | `sync-samples-patterns` | Extraire des patterns anonymisés depuis `samples/` |
 | `spec-driven` | Nouvelle feature via spec → plan → tasks (spec-kit lean) |
+| `use-factorydrive` | Expliquer, configurer ou intégrer Factorydrive dans une application NestJS |
 | `factorydrive-driver` | Ajouter ou étendre un driver de stockage |
 
 ## Workflow spec-driven (spec-kit lean)
