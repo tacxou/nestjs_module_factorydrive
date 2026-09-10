@@ -16,7 +16,7 @@ documented response fields. Treat `raw` as diagnostic or provider-specific data.
 
 ```ts
 import { Injectable } from '@nestjs/common'
-import { FactorydriveService } from '@tacxou/nestjs_module_factorydrive'
+import { FactorydriveService } from '@ficsysfr/nestjs_module_factorydrive'
 
 @Injectable()
 export class DocumentStorageService {

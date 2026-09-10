@@ -15,7 +15,7 @@ description: >-
 - **Core** (`src/factorydrive/`) : `AbstractStorage`, `StorageManager`, driver `local`
 - **Service Nest** : `FactorydriveService` façadise le manager
 - **Module** : `FactorydriveModule.forRoot` / `forRootAsync`
-- **Drivers externes** : packages `@tacxou/nestjs_module_factorydrive-*` (ex. S3)
+- **Drivers externes** : packages `@ficsysfr/nestjs_module_factorydrive-*` (ex. S3)
 
 ## Nouveau driver dans un package satellite
 
@@ -24,8 +24,8 @@ description: >-
 2. Exposer une fonction d'enregistrement du driver consommable par l'hôte
    (pattern du package S3).
 3. Ne **pas** ajouter de dépendance cloud/SDK dans le package principal.
-4. Peer-dépendre de `@tacxou/nestjs_module_factorydrive` (+ Nest si besoin).
-5. Tests Bun dans le package driver ; documenter la config `disks` dans son README.
+4. Peer-dépendre de `@ficsysfr/nestjs_module_factorydrive` (+ Nest si besoin).
+5. Tests Vitest dans le package driver ; documenter la config `disks` dans son README.
 6. Scope de commit : `s3` (ou nouveau scope documenté dans
    `docs/conventions/conventional-commits.md` si autre driver).
 
@@ -35,7 +35,7 @@ description: >-
 - Signalier bump SemVer : nouvelle méthode sur `AbstractStorage` = souvent **MINOR**
   (ou **MAJOR** si signature breaking)
 - Ajouter / adapter les tests sous `tests/`
-- Vérifier : `bun test` puis `bun run build`
+- Vérifier : `yarn lint`, `yarn test`, puis `yarn build`
 
 ## Checklist
 

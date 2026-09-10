@@ -1,4 +1,4 @@
-import { ModuleMetadata, Type } from '@nestjs/common'
+import type { ModuleMetadata, Type } from '@nestjs/common'
 import type { StorageManagerConfig } from './factorydrive'
 
 export interface FactorydriveModuleOptionsFactory {
@@ -6,10 +6,10 @@ export interface FactorydriveModuleOptionsFactory {
 }
 
 export interface FactorydriveModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Nest injection tokens accept arbitrary values.
   inject?: any[]
   useClass?: Type<FactorydriveModuleOptionsFactory>
   useExisting?: Type<FactorydriveModuleOptionsFactory>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Nest factories accept arbitrary injected values.
   useFactory?: (...args: any[]) => Promise<StorageManagerConfig> | StorageManagerConfig
 }

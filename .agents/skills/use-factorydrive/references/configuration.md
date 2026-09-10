@@ -17,14 +17,14 @@ installed in the consuming application before editing it.
 Install the core package for every setup:
 
 ```bash
-npm install @tacxou/nestjs_module_factorydrive
+npm install @ficsysfr/nestjs_module_factorydrive
 ```
 
 Install a maintained satellite driver only when required:
 
 ```bash
-npm install @tacxou/nestjs_module_factorydrive-s3
-npm install @tacxou/nestjs_module_factorydrive-sftp
+npm install @ficsysfr/nestjs_module_factorydrive-s3
+npm install @ficsysfr/nestjs_module_factorydrive-sftp
 ```
 
 Use the consuming project's existing package manager rather than switching it.
@@ -33,7 +33,7 @@ Use the consuming project's existing package manager rather than switching it.
 
 ```ts
 import { Module } from '@nestjs/common'
-import { FactorydriveModule } from '@tacxou/nestjs_module_factorydrive'
+import { FactorydriveModule } from '@ficsysfr/nestjs_module_factorydrive'
 
 @Module({
   imports: [
@@ -63,7 +63,7 @@ Keep environment access in module configuration rather than business services:
 ```ts
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { FactorydriveModule } from '@tacxou/nestjs_module_factorydrive'
+import { FactorydriveModule } from '@ficsysfr/nestjs_module_factorydrive'
 
 @Module({
   imports: [
@@ -124,8 +124,8 @@ import { Module } from '@nestjs/common'
 import {
   FactorydriveModule,
   FactorydriveService,
-} from '@tacxou/nestjs_module_factorydrive'
-import { AwsS3Storage } from '@tacxou/nestjs_module_factorydrive-s3'
+} from '@ficsysfr/nestjs_module_factorydrive'
+import { AwsS3Storage } from '@ficsysfr/nestjs_module_factorydrive-s3'
 
 @Module({
   imports: [
@@ -164,8 +164,8 @@ import { Module } from '@nestjs/common'
 import {
   FactorydriveModule,
   FactorydriveService,
-} from '@tacxou/nestjs_module_factorydrive'
-import { SFTPStorage } from '@tacxou/nestjs_module_factorydrive-sftp'
+} from '@ficsysfr/nestjs_module_factorydrive'
+import { SFTPStorage } from '@ficsysfr/nestjs_module_factorydrive-sftp'
 
 @Module({
   imports: [

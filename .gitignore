@@ -7,6 +7,10 @@
 !tests/**
 !docs/
 !docs/**
+!mcp/
+!mcp/**
+!scripts/
+!scripts/**
 !.agents/
 !.agents/**
 !.cursor/
@@ -21,13 +25,12 @@
 !.gitignore
 !.gitattributes
 !.npmrc
-!.prettierrc
-!.prettierignore
-!.eslintrc.js
+!biome.json
 !.editorconfig
 !.cursorrules
 !tsconfig.json
 !tsconfig.build.json
+!vitest.config.mts
 !package.json
 !Makefile
 !README.md
@@ -35,4 +38,12 @@
 !LICENSE
 !AGENTS.md
 !CLAUDE.md
-!bun.lock*
+!MIGRATION-2.0-ROLLOUT.md
+!yarn.lock
+
+# Generated documentation, package, and MCP build artifacts
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+mcp/dist/
+mcp/node_modules/
+.artifacts/

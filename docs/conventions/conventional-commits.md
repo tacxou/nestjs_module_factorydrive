@@ -42,9 +42,9 @@ Utiliser **un seul scope** par commit, celui du périmètre principal touché :
 | Scope | Périmètre |
 |-------|-----------|
 | `src` | `src/` — code source du module principal |
-| `tests` | `tests/` — tests Bun du package principal |
+| `tests` | `tests/` — tests Vitest du package principal |
 | `s3` | `packages/nestjs_module_factorydrive-s3/` — driver S3 |
-| `deps` | mises à jour de dépendances (`package.json`, `bun.lock`) |
+| `deps` | mises à jour de dépendances (`package.json`, `yarn.lock`) |
 | `ci` | `.github/`, workflows |
 | `root` | racine (`README.md`, `docs/`, règles IA, config) |
 

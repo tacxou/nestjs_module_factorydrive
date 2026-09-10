@@ -1,15 +1,10 @@
 #!/usr/bin/env node
 /**
- * Smoke test exécuté par Node contre le `dist/` bâti (pas par Bun, pas contre `src/`).
+ * Smoke test exécuté par Node contre le `dist/` bâti, pas contre `src/`.
  *
- * Raison d'être : `dist/index.js` est produit par `bun build`, qui émet de la syntaxe
- * ESM, sans que `package.json` déclare `"type": "module"`. Node détecte la syntaxe et
- * charge donc le paquet en ESM — un contexte où `import * as ns from '<paquet-cjs>'`
- * peut silencieusement manquer des exports que `cjs-module-lexer` ne détecte pas
- * statiquement (cf. `fs-extra`, dont les exports sont assemblés par des `require()`
- * étalés). `bun test` ne reproduit PAS ce bug : le runtime Bun résout ces imports
- * correctement quel que soit le mode de résolution déclaré. Seul `node` exécutant le
- * `dist` réel — le chemin de prod — peut l'attraper.
+ * Raison d'être : les tests unitaires chargent directement les sources TypeScript.
+ * Seul Node exécutant le `dist` réel valide le format CommonJS publié, la résolution
+ * des dépendances externes et l'interop avec `fs-extra` sur le chemin de production.
  *
  * Couvre toutes les méthodes de `LocalFileSystemStorage` qui délèguent à `fse` :
  * put (Buffer + stream), get, getBuffer, getStat, getStream, append, exists, delete.

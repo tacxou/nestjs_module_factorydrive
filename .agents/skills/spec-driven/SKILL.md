@@ -47,7 +47,7 @@ Numéroter `NNN` = prochain entier libre sous `specs/`.
 
 - Approche technique (fichiers touchés, contrats `AbstractStorage`)
 - Risques compatibilité / peerDependencies Nest
-- Stratégie de tests (`bun test`)
+- Stratégie de tests (`yarn test`)
 
 ### 3. Tasks — `tasks.md`
 
@@ -57,6 +57,7 @@ Checklist ordonnée, une case = une unité vérifiable. Inclure tests + build.
 
 - Cocher les tasks au fil de l'eau
 - Respecter `CLAUDE.md` (imports Nest, barrel `src/index.ts`)
+- Vérifier avec `yarn lint`, `yarn test` et `yarn build`
 - Ne pas committer sans demande explicite
 
 ## Références

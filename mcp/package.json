@@ -1,0 +1,63 @@
+{
+  "name": "@ficsysfr/nestjs_module_factorydrive-mcp",
+  "version": "2.0.0",
+  "description": "MCP server for the Factorydrive llms.txt documentation",
+  "repository": "https://github.com/FicSysFR/nestjs_module_factorydrive.git",
+  "homepage": "https://ficsysfr.github.io/nestjs_module_factorydrive/en/guide/ai",
+  "bugs": {
+    "url": "https://github.com/FicSysFR/nestjs_module_factorydrive/issues"
+  },
+  "author": "tacxou <12997062+tacxou@users.noreply.github.com> (https://github.com/tacxou)",
+  "license": "MIT",
+  "keywords": [
+    "factorydrive",
+    "mcp",
+    "model-context-protocol",
+    "nestjs",
+    "storage",
+    "documentation"
+  ],
+  "type": "module",
+  "bin": {
+    "nestjs-module-factorydrive-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "build": "yarn typecheck && tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "test": "yarn build && node --test tests/*.test.mjs",
+    "prepublishOnly": "yarn test"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.0.0",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.9.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "provenance": true
+  },
+  "packageManager": "yarn@1.22.22"
+}

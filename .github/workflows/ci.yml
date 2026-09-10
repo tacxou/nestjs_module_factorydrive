@@ -1,6 +1,8 @@
 name: CI
+
 permissions:
   contents: read
+  id-token: write
 
 on:
   push:
@@ -13,57 +15,74 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  verify:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Run tests with coverage
-        run: bun test --coverage --coverage-reporter lcov
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: tacxou/nestjs_module_factorydrive
-          files: ./coverage/lcov.info
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
-
-  build:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-        with:
-          bun-version: latest
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Build project
-        run: bun run build
-
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
+          cache: yarn
+          cache-dependency-path: |
+            yarn.lock
+            mcp/yarn.lock
 
-      - name: Smoke test dist/ under Node (catches ESM/CJS interop breakage bun test cannot see)
+      - name: Install core dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Install MCP dependencies
+        run: yarn mcp:install
+
+      - name: Run Biome checks
+        run: yarn lint:ci
+
+      - name: Typecheck core
+        run: yarn typecheck
+
+      - name: Run core tests with coverage
+        run: yarn test:coverage
+
+      - name: Build core
+        run: yarn build
+
+      - name: Smoke test the production build
         run: node tests/dist-node-smoke.mjs
+
+      - name: Test MCP protocol and documentation client
+        run: yarn mcp:test
+
+      - name: Build documentation and LLM artifacts
+        run: yarn docs:build
+
+      - name: Validate documentation and LLM artifacts
+        run: yarn docs:check
+
+      - name: Test repository scripts
+        run: yarn test:scripts
+
+      - name: Validate changelog sources
+        run: yarn changelog:check
+
+      - name: Audit core and MCP tarballs
+        run: yarn package:check
+
+      - name: Upload package audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-package-audit
+          path: .artifacts/npm/
+          if-no-files-found: error
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          use_oidc: true
+          slug: ${{ github.repository }}
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true

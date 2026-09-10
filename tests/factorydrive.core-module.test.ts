@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'bun:test'
-import { FactorydriveCoreModule } from '../src/factorydrive.core-module'
-import { FACTORYDRIVE_MODULE_OPTIONS_TOKEN } from '../src/factorydrive.constants'
-import { FactorydriveService } from '../src/factorydrive.service'
-import type { FactorydriveModuleOptionsFactory } from '../src/factorydrive.interfaces'
+import { describe, expect, it } from 'vitest'
 import type { StorageManagerConfig } from '../src/factorydrive'
+import { FACTORYDRIVE_MODULE_OPTIONS_TOKEN } from '../src/factorydrive.constants'
+import { FactorydriveCoreModule } from '../src/factorydrive.core-module'
+import type { FactorydriveModuleOptionsFactory } from '../src/factorydrive.interfaces'
+import { FactorydriveService } from '../src/factorydrive.service'
 
 class TestOptionsFactory implements FactorydriveModuleOptionsFactory {
   public createFactorydriveModuleOptions(): StorageManagerConfig {
@@ -58,9 +58,7 @@ describe('FactorydriveCoreModule', () => {
     })
 
     const providers = dynamicModule.providers ?? []
-    const classProvider = providers.find(
-      (provider) => typeof provider === 'object' && provider !== null && 'provide' in provider && provider.provide === TestOptionsFactory,
-    )
+    const classProvider = providers.find((provider) => typeof provider === 'object' && provider !== null && 'provide' in provider && provider.provide === TestOptionsFactory)
     const asyncOptionsProvider = providers.find(
       (provider) => typeof provider === 'object' && provider !== null && 'provide' in provider && provider.provide === FACTORYDRIVE_MODULE_OPTIONS_TOKEN,
     ) as { inject?: unknown[]; useFactory: (factory: FactorydriveModuleOptionsFactory) => Promise<StorageManagerConfig> } | undefined

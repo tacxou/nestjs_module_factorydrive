@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'bun:test'
-import StorageManager from '../src/factorydrive/storage.manager'
-import AbstractStorage from '../src/factorydrive/abstract.storage'
+import { describe, expect, it } from 'vitest'
 import { DriverNotSupportedException, InvalidConfigException } from '../src/exceptions'
+import AbstractStorage from '../src/factorydrive/abstract.storage'
+import StorageManager from '../src/factorydrive/storage.manager'
 import type { StorageManagerConfig } from '../src/factorydrive/types'
 
 class FakeStorage extends AbstractStorage {

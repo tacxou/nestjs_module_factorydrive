@@ -3,11 +3,11 @@
 Ce fichier fait foi pour toute contribution de Claude Code sur ce dépôt. Les règles
 ci-dessous sont **impératives** et priment sur les habitudes par défaut.
 
-`@tacxou/nestjs_module_factorydrive` est un **module NestJS** (bibliothèque npm)
+`@ficsysfr/nestjs_module_factorydrive` est un **module NestJS** (bibliothèque npm)
 d'abstraction de stockage fichiers. Il expose `FactorydriveModule`,
 `FactorydriveService`, `StorageManager`, le driver `local` et le contrat
 `AbstractStorage` pour les drivers custom (ex. S3 via
-`@tacxou/nestjs_module_factorydrive-s3`).
+`@ficsysfr/nestjs_module_factorydrive-s3`).
 
 Les skills Codex / agents : [`.agents/skills/`](.agents/skills/). Les instructions
 courtes multi-agents : [`AGENTS.md`](AGENTS.md).
@@ -44,10 +44,11 @@ nestjs_module_factorydrive/
 │   ├── exceptions/
 │   └── index.ts                      # Barrel — tout export public passe par ici
 ├── packages/
-│   └── nestjs_module_factorydrive-s3/  # Driver S3 (package npm satellite)
-├── tests/                            # Tests Bun
-├── docs/
-│   └── conventions/                  # Conventional Commits, etc.
+│   ├── nestjs_module_factorydrive-s3/  # Driver S3 (dépôt npm satellite)
+│   └── nestjs_module_factorydrive-sftp/ # Driver SFTP (dépôt npm satellite)
+├── mcp/                              # Serveur MCP documentaire ESM
+├── tests/                            # Tests Vitest exécutés avec Yarn
+├── docs/                             # VitePress bilingue + conventions
 ├── .agents/skills/                   # Skills agents (commit, release, drivers…)
 ├── .cursor/                          # Rules + commandes Cursor
 ├── samples/                          # Inspiration locale (git-ignoré)
@@ -65,21 +66,28 @@ nestjs_module_factorydrive/
 À la fin de **toute** modification de code, avant de présenter le travail comme
 terminé, lancer et faire passer au vert :
 
-1. **Tests** :
+1. **Qualité** :
    ```bash
-   bun test
+   yarn lint
    ```
-2. **Build** :
+2. **Tests** :
    ```bash
-   bun run build
+   yarn test
+   ```
+3. **Build** :
+   ```bash
+   yarn build
    ```
 
 Règles : ne jamais contourner un hook ni un échec (`--no-verify` interdit). Si un
 check échoue, corriger la cause racine. Une modification n'est « terminée » que lorsque
 tests et build passent au vert.
 
-Pour le package S3 (`packages/nestjs_module_factorydrive-s3/`), lancer les scripts
-équivalents **dans ce package** (`bun test`, `bun run build`).
+Pour les packages S3 et SFTP sous `packages/`, lancer les scripts équivalents **dans
+chaque dépôt** avec Yarn (`yarn lint`, `yarn typecheck`, `yarn test`, `yarn build`,
+`yarn package:check`). Pour le
+MCP, utiliser `yarn mcp:test`. Pour la documentation, utiliser `yarn docs:build` puis
+`yarn docs:check`.
 
 ---
 
@@ -101,6 +109,7 @@ Respecter strictement les conventions TypeScript et NestJS.
 
 **Style**
 - TypeScript strict sur les API publiques, pas de `any` implicite.
+- Biome est l'unique outil de lint et de formatage (`yarn lint`, `yarn lint:fix`, `yarn format`).
 - Injection de dépendances Nest, un fichier = une responsabilité.
 - **Imports** : classes injectées et symboles Nest en **import valeur** (DI + `emitDecoratorMetadata`) ;
   `import type` pour les types purs sans métadonnées runtime. Voir `.cursor/rules/nestjs-library-imports.mdc`.
@@ -109,15 +118,15 @@ Respecter strictement les conventions TypeScript et NestJS.
 - `StorageManager` enregistre les drivers et résout les disques nommés.
 - Tout nouveau driver étend `AbstractStorage` et s'enregistre via le manager.
 - Le driver `local` vit dans le package principal ; S3 et autres drivers dans des
-  packages satellites (`@tacxou/nestjs_module_factorydrive-*`).
+  packages satellites (`@ficsysfr/nestjs_module_factorydrive-*`).
 - Voir le skill `.agents/skills/factorydrive-driver/SKILL.md`.
 
 ---
 
-## 4. Package S3 (`packages/nestjs_module_factorydrive-s3/`)
+## 4. Packages S3 et SFTP (`packages/`)
 
-- Package npm distinct, peer sur `@tacxou/nestjs_module_factorydrive`.
-- Même discipline SemVer / Conventional Commits (scope `s3`).
+- Packages npm distincts, peer sur `@ficsysfr/nestjs_module_factorydrive@^2.0.0`.
+- Même discipline SemVer / Conventional Commits (scopes `s3` et `sftp`).
 - Ne pas coupler le core à AWS SDK : le core reste agnostique.
 
 ---
@@ -133,8 +142,13 @@ Respecter strictement les conventions TypeScript et NestJS.
 
 ## 6. Publication
 
-- Publication npm déclenchée par le workflow `.github/workflows/release.yml`
-  (`workflow_dispatch` avec bump major/minor/patch).
-- Le champ `version` de `package.json` doit rester aligné avec le tag SemVer `vX.Y.Z`.
+- Publication core + MCP déclenchée par `.github/workflows/release.yml`
+  (`workflow_dispatch` avec une version exacte `X.Y.Z`). Les versions des deux manifests
+  restent synchronisées et alignées avec le tag `vX.Y.Z`.
+- S3 et SFTP sont publiés par le `release.yml` de leur propre dépôt avec une version
+  exacte et après leurs tests, builds et audits de tarball.
+- La publication initiale 2.0.0 utilise temporairement `NPM_TOKEN` avec provenance ; les
+  versions suivantes utilisent npm Trusted Publishing / GitHub OIDC uniquement.
+- Toujours exécuter `yarn package:check` avant chaque release.
 - Le script `postbuild` génère les `.d.ts` et copie `README.md`, `LICENSE`, `package.json` dans `dist/`.
 - Préparation assistée : skill `.agents/skills/github-release/SKILL.md`.

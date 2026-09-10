@@ -1,13 +1,13 @@
-import { DynamicModule, Global, Module, Provider, Type } from '@nestjs/common'
-import { FactorydriveService } from './factorydrive.service'
+import { type DynamicModule, Global, Module, type Provider, type Type } from '@nestjs/common'
+import type { StorageManagerConfig } from './factorydrive'
 import { FACTORYDRIVE_MODULE_OPTIONS_TOKEN } from './factorydrive.constants'
 import type { FactorydriveModuleAsyncOptions, FactorydriveModuleOptionsFactory } from './factorydrive.interfaces'
-import type { StorageManagerConfig } from './factorydrive'
+import { FactorydriveService } from './factorydrive.service'
 
 @Global()
 @Module({})
 export class FactorydriveCoreModule {
-  public constructor() { }
+  public constructor() {}
 
   public static forRoot(options: StorageManagerConfig): DynamicModule {
     const storageModuleOptions: Provider = {

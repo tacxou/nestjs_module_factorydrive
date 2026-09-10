@@ -2,7 +2,7 @@
 
 Fichier lu par Cursor Agent, Codex, Copilot Agent et assistants similaires.
 
-`@tacxou/nestjs_module_factorydrive` est un **module NestJS** (bibliothèque npm) qui
+`@ficsysfr/nestjs_module_factorydrive` est un **module NestJS** (bibliothèque npm) qui
 abstrait le stockage fichiers (disques, drivers local / S3 / custom).
 
 ## Règles absolues
@@ -14,13 +14,17 @@ abstrait le stockage fichiers (disques, drivers local / S3 / custom).
 - Ne pas contourner lint, tests ou hooks avec `--no-verify` ou un assouplissement
   non demandé.
 - Ne pas corriger des problèmes hors du périmètre de la demande.
+- Utiliser Yarn `1.22.22` et conserver `yarn.lock` comme seul lockfile.
+- Utiliser Biome pour le lint et le formatage ; ne pas réintroduire ESLint ou Prettier.
 
 ## Arborescence utile
 
 ```text
 src/                         # Module principal (API publique)
-packages/nestjs_module_factorydrive-s3/  # Driver S3 (package satellite)
-tests/                       # Tests Bun
+packages/nestjs_module_factorydrive-s3/  # Driver S3 (dépôt satellite)
+packages/nestjs_module_factorydrive-sftp/ # Driver SFTP (dépôt satellite)
+mcp/                         # Serveur MCP documentaire
+tests/                       # Tests Vitest exécutés avec Yarn
 docs/                        # Conventions et documentation agents
 .agents/skills/              # Skills réutilisables (source de vérité)
 .cursor/                     # Rules + commandes Cursor
@@ -56,7 +60,7 @@ Les workflows réutilisables vivent dans [`.agents/skills/`](.agents/skills/) :
 |-------|------------------|
 | `commit-message` | Générer un message Conventional Commits + bump SemVer |
 | `github-issue-comment` | Brouillon de commentaire d'issue dans `.issues/{n}.md` |
-| `github-release` | Préparer une release npm (bump, notes, commandes) |
+| `github-release` | Préparer une release npm exacte core/MCP ou satellite |
 | `sync-samples-patterns` | Extraire des patterns anonymisés depuis `samples/` |
 | `spec-driven` | Nouvelle feature via spec → plan → tasks (spec-kit lean) |
 | `use-factorydrive` | Expliquer, configurer ou intégrer Factorydrive dans une application NestJS |

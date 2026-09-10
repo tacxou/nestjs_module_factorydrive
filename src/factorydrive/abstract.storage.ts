@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 // noinspection JSUnusedGlobalSymbols
 
 import { MethodNotSupportedException } from '../exceptions'
-import { ContentResponse, DeleteResponse, ExistsResponse, FileListResponse, Response, SignedUrlOptions, SignedUrlResponse, StatResponse, VerifySignedUrlParams } from './types'
+import type { ContentResponse, DeleteResponse, ExistsResponse, FileListResponse, Response, SignedUrlOptions, SignedUrlResponse, StatResponse, VerifySignedUrlParams } from './types'
 
 export default abstract class AbstractStorage {
   public constructor() {

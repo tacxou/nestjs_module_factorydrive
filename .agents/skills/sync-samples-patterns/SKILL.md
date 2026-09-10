@@ -45,4 +45,4 @@ Si un pattern nouveau apparaît, créer `0N-<slug>.md` et l'ajouter à l'index.
 
 Français. Sections : **Quand l'utiliser**, **Stack de référence**, **Structure**,
 **Pièges**, **À retenir pour Factorydrive**. Toujours raccrocher aux conventions
-du dépôt (`src/index.ts`, SemVer, Bun, drivers via `AbstractStorage`).
+du dépôt (`src/index.ts`, SemVer, Yarn, drivers via `AbstractStorage`).

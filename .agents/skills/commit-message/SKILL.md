@@ -29,7 +29,7 @@ type(scope): imperative description in English
 - Sujet anglais, impératif, minuscule après `:`, sans point final, 72 caractères maximum.
 - Breaking change : `type(scope)!:` ou pied `BREAKING CHANGE:`.
 - SemVer : `fix` = PATCH, `feat` = MINOR, breaking = MAJOR ; sinon aucun bump.
-  Signaler le package touché (`@tacxou/nestjs_module_factorydrive` et/ou `-s3`).
+  Signaler le package touché (`@ficsysfr/nestjs_module_factorydrive` et/ou un satellite).
 
 ## Sortie attendue
 

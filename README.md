@@ -9,15 +9,16 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/org/tacxou"><img src="https://img.shields.io/npm/v/@tacxou/nestjs_module_factorydrive.svg" alt="NPM Version" /></a>
-  <a href="https://www.npmjs.com/org/tacxou"><img src="https://img.shields.io/npm/l/@tacxou/nestjs_module_factorydrive.svg" alt="Package License" /></a>
-  <a href="https://github.com/tacxou/nestjs_module_rcon/actions/workflows/ci.yml"><img src="https://github.com/tacxou/nestjs_module_factorydrive/actions/workflows/ci.yml/badge.svg" alt="Publish Package to npmjs" /></a>
-  <a href="https://codecov.io/gh/tacxou/nestjs_module_factorydrive"><img src="https://codecov.io/gh/tacxou/nestjs_module_factorydrive/graph/badge.svg?token=BX1NdAZ9yj"/></a>
-  <a href="https://github.com/tacxou/nestjs_module_rcon/actions/workflows/release.yml?event=workflow_dispatch"><img alt="GitHub contributors" src="https://github.com/tacxou/nestjs_module_rcon/actions/workflows/release.yml/badge.svg"></a>
+  <a href="https://www.npmjs.com/package/@ficsysfr/nestjs_module_factorydrive"><img src="https://img.shields.io/npm/v/@ficsysfr/nestjs_module_factorydrive.svg" alt="NPM Version" /></a>
+  <a href="https://www.npmjs.com/package/@ficsysfr/nestjs_module_factorydrive"><img src="https://img.shields.io/npm/l/@ficsysfr/nestjs_module_factorydrive.svg" alt="Package License" /></a>
+  <a href="https://github.com/FicSysFR/nestjs_module_factorydrive/actions/workflows/ci.yml"><img src="https://github.com/FicSysFR/nestjs_module_factorydrive/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://codecov.io/gh/FicSysFR/nestjs_module_factorydrive"><img src="https://codecov.io/gh/FicSysFR/nestjs_module_factorydrive/graph/badge.svg" alt="Coverage" /></a>
+  <a href="https://ficsysfr.github.io/nestjs_module_factorydrive/llms.txt"><img src="https://img.shields.io/badge/llms.txt-AI%20docs-111111" alt="llms.txt" /></a>
+  <a href="https://www.npmjs.com/package/@ficsysfr/nestjs_module_factorydrive-mcp"><img src="https://img.shields.io/badge/MCP-factorydrive--mcp-6B4EFF" alt="MCP" /></a>
 </p>
 <br>
 
-## `@tacxou/nestjs_module_factorydrive`
+## `@ficsysfr/nestjs_module_factorydrive`
 
 `nestjs_module_factorydrive` provides a simple storage abstraction for NestJS:
 - configure one or many disks
@@ -29,14 +30,15 @@
 
 Current maintained packages in the Factorydrive ecosystem:
 
-- `local`: [`nestjs_module_factorydrive`](https://github.com/tacxou/nestjs_module_factorydrive/blob/main/src/factorydrive/local-file-system.storage.ts)
-- `s3`: [`nestjs_module_factorydrive-s3`](https://github.com/tacxou/nestjs_module_factorydrive-s3)
-- `sftp`: [`nestjs_module_factorydrive-sftp`](https://github.com/tacxou/nestjs_module_factorydrive-sftp)
+- `local`: [`nestjs_module_factorydrive`](https://github.com/FicSysFR/nestjs_module_factorydrive/blob/main/src/factorydrive/local-file-system.storage.ts)
+- `s3`: [`nestjs_module_factorydrive-s3`](https://github.com/FicSysFR/nestjs_module_factorydrive-s3)
+- `sftp`: [`nestjs_module_factorydrive-sftp`](https://github.com/FicSysFR/nestjs_module_factorydrive-sftp)
+- `mcp`: [`nestjs_module_factorydrive-mcp`](https://www.npmjs.com/package/@ficsysfr/nestjs_module_factorydrive-mcp)
 
 ## Requirements
 
 - Node.js `>= 22`
-- Bun `>= 1.0.0` (used for build/test in this repository)
+- Yarn `1.22.22` (used for development in this repository)
 - NestJS `^6` to `^11` (`@nestjs/common` and `@nestjs/core`)
 
 ## Architecture and Portability
@@ -63,23 +65,49 @@ justified infrastructure code.
 ## Installation
 
 ```bash
-npm install @tacxou/nestjs_module_factorydrive
+yarn add @ficsysfr/nestjs_module_factorydrive
 ```
 
-Or with other package managers:
+Or with another package manager:
 
 ```bash
-yarn add @tacxou/nestjs_module_factorydrive
-pnpm add @tacxou/nestjs_module_factorydrive
-bun add @tacxou/nestjs_module_factorydrive
+npm install @ficsysfr/nestjs_module_factorydrive
+pnpm add @ficsysfr/nestjs_module_factorydrive
 ```
+
+## Development
+
+This repository uses Yarn, Vitest, TypeScript, and Biome:
+
+```bash
+yarn install --frozen-lockfile
+yarn lint
+yarn typecheck
+yarn test
+yarn test:coverage
+yarn build
+yarn mcp:test
+yarn docs:build
+yarn docs:check
+yarn test:scripts
+yarn changelog:check
+yarn package:check
+```
+
+The equivalent aggregate command is `make check`. Build audited core and MCP tarballs
+with `yarn package` or `make package`; outputs and `SHA256SUMS.txt` are written under
+`.artifacts/npm/`.
+
+Maintainers dispatch an exact manual release with
+`make release VERSION=2.0.0 CHANNEL=latest WATCH=1`. The privileged workflow uses the
+protected `npm` environment and npm Trusted Publishing/OIDC after the one-time bootstrap.
 
 ## Quick Start (synchronous config)
 
 ```ts
 // app.module.ts
 import { Module } from '@nestjs/common'
-import { FactorydriveModule } from '@tacxou/nestjs_module_factorydrive'
+import { FactorydriveModule } from '@ficsysfr/nestjs_module_factorydrive'
 
 @Module({
   imports: [
@@ -105,7 +133,7 @@ export class AppModule {}
 // app.module.ts
 import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { FactorydriveModule } from '@tacxou/nestjs_module_factorydrive'
+import { FactorydriveModule } from '@ficsysfr/nestjs_module_factorydrive'
 
 @Module({
   imports: [
@@ -137,7 +165,7 @@ Inject `FactorydriveService` and interact with a disk instance:
 ```ts
 // file-storage.service.ts
 import { Injectable } from '@nestjs/common'
-import { FactorydriveService } from '@tacxou/nestjs_module_factorydrive'
+import { FactorydriveService } from '@ficsysfr/nestjs_module_factorydrive'
 
 @Injectable()
 export class FileStorageService {
@@ -228,7 +256,7 @@ Custom drivers must extend `AbstractStorage` and implement the methods you need.
 
 ```ts
 // aws-s3.storage.ts
-import { AbstractStorage, DeleteResponse, Response } from '@tacxou/nestjs_module_factorydrive'
+import { AbstractStorage, DeleteResponse, Response } from '@ficsysfr/nestjs_module_factorydrive'
 
 export class AwsS3Storage extends AbstractStorage {
   public constructor(private readonly config: { bucket: string }) {
@@ -252,7 +280,7 @@ Then register it at startup:
 ```ts
 // app.module.ts
 import { Module, OnModuleInit } from '@nestjs/common'
-import { FactorydriveModule, FactorydriveService } from '@tacxou/nestjs_module_factorydrive'
+import { FactorydriveModule, FactorydriveService } from '@ficsysfr/nestjs_module_factorydrive'
 import { AwsS3Storage } from './aws-s3.storage'
 
 @Module({
@@ -317,6 +345,23 @@ Use $use-factorydrive to expose a verified local signed-download endpoint.
 
 Driver authors should use the separate
 [`factorydrive-driver`](.agents/skills/factorydrive-driver/SKILL.md) skill.
+
+## Documentation for AI agents
+
+- Documentation: <https://ficsysfr.github.io/nestjs_module_factorydrive/>
+- Machine-readable index: <https://ficsysfr.github.io/nestjs_module_factorydrive/llms.txt>
+- Full context bundle: <https://ficsysfr.github.io/nestjs_module_factorydrive/llms-full.txt>
+- MCP server: `npx -y @ficsysfr/nestjs_module_factorydrive-mcp`
+
+The documentation MCP exposes `list_doc_sources`, `search_docs`, and `fetch_docs`
+over stdio. It never receives storage configuration and cannot read or mutate application files.
+
+## Migrating to 2.0
+
+Version 2.0.0 moves the maintained ecosystem to the `@ficsysfr` npm scope without
+changing exported TypeScript symbols. Replace package names and import specifiers, then
+upgrade the core and every installed driver together. See the
+[migration guide](https://ficsysfr.github.io/nestjs_module_factorydrive/en/guide/migration).
 
 ## License
 

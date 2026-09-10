@@ -1,5 +1,5 @@
-export * from './factorydrive'
 export * from './exceptions'
-export * from './factorydrive.module'
+export * from './factorydrive'
 export * from './factorydrive.interfaces'
+export * from './factorydrive.module'
 export * from './factorydrive.service'

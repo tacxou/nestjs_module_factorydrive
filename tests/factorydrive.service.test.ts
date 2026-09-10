@@ -1,7 +1,7 @@
-import { describe, expect, it, spyOn } from 'bun:test'
-import { FactorydriveService } from '../src/factorydrive.service'
-import AbstractStorage from '../src/factorydrive/abstract.storage'
+import { describe, expect, it, vi } from 'vitest'
 import type { StorageManagerConfig } from '../src/factorydrive'
+import AbstractStorage from '../src/factorydrive/abstract.storage'
+import { FactorydriveService } from '../src/factorydrive.service'
 
 class FakeStorage extends AbstractStorage {}
 
@@ -17,7 +17,7 @@ describe('FactorydriveService', () => {
   it('delegue onModuleInit au storageManager', async () => {
     const service = new FactorydriveService(baseConfig)
     const manager = (service as unknown as { storageManager: { initDisks: () => Promise<void> } }).storageManager
-    const initSpy = spyOn(manager, 'initDisks').mockResolvedValue(undefined)
+    const initSpy = vi.spyOn(manager, 'initDisks').mockResolvedValue(undefined)
 
     await service.onModuleInit()
 
@@ -28,7 +28,7 @@ describe('FactorydriveService', () => {
     const service = new FactorydriveService(baseConfig)
     const manager = (service as unknown as { storageManager: { disk: (name?: string) => AbstractStorage } }).storageManager
     const fakeDisk = new FakeStorage()
-    const diskSpy = spyOn(manager, 'disk').mockReturnValue(fakeDisk)
+    const diskSpy = vi.spyOn(manager, 'disk').mockReturnValue(fakeDisk)
 
     const result = service.getDisk<FakeStorage>('archive')
 
@@ -39,8 +39,9 @@ describe('FactorydriveService', () => {
 
   it('delegue registerDriver au storageManager', () => {
     const service = new FactorydriveService(baseConfig)
+    // biome-ignore lint/suspicious/noExplicitAny: Mirrors the public driver constructor contract under test.
     const manager = (service as unknown as { storageManager: { registerDriver: (name: string, driver: new (...args: any[]) => AbstractStorage) => void } }).storageManager
-    const registerSpy = spyOn(manager, 'registerDriver')
+    const registerSpy = vi.spyOn(manager, 'registerDriver')
 
     service.registerDriver('fake', FakeStorage)
 

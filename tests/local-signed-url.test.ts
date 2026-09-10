@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'bun:test'
+import { describe, expect, it } from 'vitest'
 import { InvalidConfigException } from '../src/exceptions'
 import { LocalFileSystemStorage } from '../src/factorydrive/local-file-system.storage'
 

@@ -1,11 +1,11 @@
 import { createHmac, timingSafeEqual } from 'crypto'
-import fse from 'fs-extra'
 import { promises as fs } from 'fs'
+import fse from 'fs-extra'
 import { dirname, join, relative, resolve, sep } from 'path'
-import AbstractStorage from './abstract.storage'
-import { isReadableStream, pipeline } from './utils'
 import { FileNotFoundException, InvalidConfigException, PermissionMissingException, UnknownException } from '../exceptions'
-import { ContentResponse, DeleteResponse, ExistsResponse, FileListResponse, Response, SignedUrlOptions, SignedUrlResponse, StatResponse, VerifySignedUrlParams } from './types'
+import AbstractStorage from './abstract.storage'
+import type { ContentResponse, DeleteResponse, ExistsResponse, FileListResponse, Response, SignedUrlOptions, SignedUrlResponse, StatResponse, VerifySignedUrlParams } from './types'
+import { isReadableStream, pipeline } from './utils'
 
 function handleError(err: Error & { code: string; path?: string }, location: string): Error {
   switch (err.code) {

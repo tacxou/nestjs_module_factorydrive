@@ -1,4 +1,4 @@
-import { LocalFileSystemStorageConfig } from './local-file-system.storage'
+import type { LocalFileSystemStorageConfig } from './local-file-system.storage'
 
 export type { LocalFileSystemStorageConfig }
 

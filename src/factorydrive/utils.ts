@@ -1,7 +1,7 @@
-import { promisify } from 'util'
 import { pipeline as nodePipeline } from 'stream'
+import { promisify } from 'util'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Runtime stream detection intentionally accepts any input.
 export function isReadableStream(stream: any): stream is NodeJS.ReadableStream {
   return (
     stream !== null &&

@@ -35,7 +35,7 @@ and only then stream the file:
 
 ```ts
 import { ForbiddenException, Injectable } from '@nestjs/common'
-import { FactorydriveService } from '@tacxou/nestjs_module_factorydrive'
+import { FactorydriveService } from '@ficsysfr/nestjs_module_factorydrive'
 
 @Injectable()
 export class SignedFileReader {

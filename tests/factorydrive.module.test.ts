@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'bun:test'
-import { FactorydriveModule } from '../src/factorydrive.module'
-import { FactorydriveCoreModule } from '../src/factorydrive.core-module'
+import { describe, expect, it } from 'vitest'
 import type { StorageManagerConfig } from '../src/factorydrive'
+import { FactorydriveCoreModule } from '../src/factorydrive.core-module'
+import { FactorydriveModule } from '../src/factorydrive.module'
 
 describe('FactorydriveModule', () => {
   it('forRoot delegue a FactorydriveCoreModule.forRoot', () => {

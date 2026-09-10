@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { AbstractStorage, StorageManager } from './factorydrive'
 import type { StorageManagerConfig } from './factorydrive'
+import { type AbstractStorage, StorageManager } from './factorydrive'
 import { FACTORYDRIVE_MODULE_OPTIONS_TOKEN } from './factorydrive.constants'
 
 @Injectable()
@@ -19,7 +19,7 @@ export class FactorydriveService {
     return this.storageManager.disk<T>(name)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Storage drivers may expose arbitrary constructor parameters.
   public registerDriver(name: string, driver: new (...args: any[]) => AbstractStorage): void {
     this.storageManager.registerDriver(name, driver)
   }

@@ -25,7 +25,7 @@ Mapper les chemins modifiés :
 | `src/` | `src` |
 | `tests/` | `tests` |
 | `packages/nestjs_module_factorydrive-s3/` | `s3` |
-| `package.json`, `bun.lock` (dépendances) | `deps` |
+| `package.json`, `yarn.lock` (dépendances) | `deps` |
 | `.github/` | `ci` |
 | `README.md`, `docs/`, règles IA, config racine | `root` |
 

@@ -11,9 +11,9 @@ description: >-
 # github-release — Préparer une release Factorydrive
 
 Ce skill prépare une release versionnée du package npm
-`@tacxou/nestjs_module_factorydrive` (et éventuellement du driver S3).
-La publication est déclenchée par `.github/workflows/release.yml`
-(`workflow_dispatch` avec `version_increment`).
+`@ficsysfr/nestjs_module_factorydrive` et de son package MCP synchronisé, ou une
+release d'un driver satellite. La publication est déclenchée par le `release.yml` du
+dépôt concerné avec une version SemVer exacte `release_version=X.Y.Z`.
 
 ## Règles non négociables
 
@@ -31,28 +31,48 @@ La publication est déclenchée par `.github/workflows/release.yml`
    (Conventional Commits + sens si préfixe absent).
 5. **Proposer le bump** (`MAJOR` / `MINOR` / `PATCH`) et **demander confirmation**.
 6. **Notes de release** en français, orientées utilisateur, hash courts entre parenthèses.
-7. **Vérifications** avant publication :
+7. **Vérifications core + MCP** avant publication :
    ```bash
-   bun test
-   bun run build
+   yarn lint
+   yarn typecheck
+   yarn test:coverage
+   yarn build
+   yarn mcp:test
+   yarn docs:build
+   yarn docs:check
+   yarn changelog:check
+   yarn test:scripts
+   yarn package:check
    ```
 8. **Commandes à afficher** (ne pas les exécuter) :
 
 ```bash
-# Option A — workflow officiel (bump + tag + npm publish + GitHub Release)
-gh workflow run release.yml -f version_increment=patch   # ou minor / major
+# Option A — workflow officiel (versions synchronisées + tag + npm + GitHub Release)
+gh workflow run release.yml -f release_version=X.Y.Z -f channel=latest
 
 # Option B — si l'utilisateur préfère un bump local manuel avant
 # (après édition de package.json, commit + tag laissés à l'utilisateur)
 ```
 
-## Package S3
+## Packages S3 et SFTP
 
-Si la release concerne `packages/nestjs_module_factorydrive-s3/` :
+Si la release concerne un dépôt sous `packages/` :
 
-- Traiter sa version SemVer **séparément** (`package.json` du package).
+- Fournir une version SemVer exacte et maintenir le peer core compatible avec la même
+  version majeure.
 - Indiquer clairement quel dépôt / workflow publie ce package satellite
-  (souvent un dépôt npm distinct — vérifier `package.json` → `repository`).
+  (vérifier `package.json` → `repository`).
+- Exécuter `yarn lint`, `yarn typecheck`, `yarn test:coverage`, `yarn build`,
+  `yarn changelog:check`, `yarn test:scripts` et `yarn package:check`.
+
+## Authentification npm
+
+- La première publication 2.0.0 peut utiliser exceptionnellement le secret
+  `NPM_TOKEN`, avec `--provenance`.
+- Dès que le package existe, rattacher son Trusted Publisher au `release.yml` du bon
+  dépôt, supprimer le secret et la variable `NODE_AUTH_TOKEN`, puis publier uniquement
+  via GitHub OIDC.
+- Ne jamais réintroduire un jeton pour contourner un échec OIDC.
 
 ## Sortie attendue
 

@@ -1,12 +1,12 @@
-import { LocalFileSystemStorage } from './local-file-system.storage'
-import AbstractStorage from './abstract.storage'
-import { DriverNotSupportedException, InvalidConfigException } from '../exceptions'
-import type { StorageManagerConfig, StorageManagerDiskConfig, StorageManagerSingleDiskConfig } from './types'
 import { Logger } from '@nestjs/common'
+import { DriverNotSupportedException, InvalidConfigException } from '../exceptions'
+import type AbstractStorage from './abstract.storage'
+import { LocalFileSystemStorage } from './local-file-system.storage'
+import type { StorageManagerConfig, StorageManagerDiskConfig, StorageManagerSingleDiskConfig } from './types'
 
 interface StorageConstructor<T extends AbstractStorage = AbstractStorage> {
-  // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
-  new(...args: any[]): T
+  // biome-ignore lint/suspicious/noExplicitAny: Storage drivers may expose arbitrary constructor parameters.
+  new (...args: any[]): T
 }
 
 export default class StorageManager {

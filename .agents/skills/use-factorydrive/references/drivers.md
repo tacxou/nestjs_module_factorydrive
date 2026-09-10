@@ -20,7 +20,7 @@ implementation; calling it raises `MethodNotSupportedException`.
 
 ## Local
 
-- Package: `@tacxou/nestjs_module_factorydrive`
+- Package: `@ficsysfr/nestjs_module_factorydrive`
 - Class: `LocalFileSystemStorage` (registered automatically as `local`)
 - Required configuration: `root`
 - Optional URL configuration: `baseUrl`, `signatureSecret`
@@ -32,7 +32,7 @@ server. See [signed-urls.md](signed-urls.md).
 
 ## S3
 
-- Package: `@tacxou/nestjs_module_factorydrive-s3`
+- Package: `@ficsysfr/nestjs_module_factorydrive-s3`
 - Class: `AwsS3Storage`
 - Registration key: application-defined, conventionally `s3`
 - Required configuration: `bucket`
@@ -43,11 +43,11 @@ The driver supports Amazon S3 and S3-compatible providers. Do not hardcode a par
 provider's endpoint or credentials in business services. Its `getSignedUrl()` produces a
 provider-signed GET URL; Factorydrive does not verify that URL in the application.
 
-Current source: <https://github.com/tacxou/nestjs_module_factorydrive-s3>
+Current source: <https://github.com/FicSysFR/nestjs_module_factorydrive-s3>
 
 ## SFTP
 
-- Package: `@tacxou/nestjs_module_factorydrive-sftp`
+- Package: `@ficsysfr/nestjs_module_factorydrive-sftp`
 - Class: `SFTPStorage`
 - Registration key: application-defined, conventionally `sftp`
 - Required configuration: remote `root` and `options`
@@ -58,7 +58,7 @@ The driver connects during `onStorageInit()`. Register its class before module
 initialization. Resolve the configured disk through `FactorydriveService.getDisk()`;
 do not use obsolete examples based on `createDisk()` or `disk()`.
 
-Current source: <https://github.com/tacxou/nestjs_module_factorydrive-sftp/blob/main/src/sftp.storage.ts>
+Current source: <https://github.com/FicSysFR/nestjs_module_factorydrive-sftp/blob/main/src/sftp.storage.ts>
 
 ## Select a driver
 
@@ -67,4 +67,3 @@ Current source: <https://github.com/tacxou/nestjs_module_factorydrive-sftp/blob/
 - Choose SFTP only when an external system requires file exchange over SFTP.
 - Hide that choice behind the configured default disk whenever business behavior does
   not depend on the provider.
-
