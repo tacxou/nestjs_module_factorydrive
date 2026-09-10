@@ -73,10 +73,14 @@ export function validatePackMetadata(pack) {
   if (unexpected) throw new Error(`${pack.name} contains non-allowlisted path ${unexpected}`)
 }
 
-function parsePackOutput(output) {
+export function parsePackOutput(output) {
   const parsed = JSON.parse(output)
-  if (!Array.isArray(parsed) || parsed.length !== 1) throw new Error('npm pack returned an unexpected report')
-  return parsed[0]
+  const reports = Array.isArray(parsed) ? parsed : [parsed]
+  const report = reports[0]
+  if (reports.length !== 1 || report === null || typeof report !== 'object' || Array.isArray(report)) {
+    throw new Error('npm pack returned an unexpected report')
+  }
+  return report
 }
 
 async function sha256(path) {
