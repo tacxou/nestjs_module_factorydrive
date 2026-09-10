@@ -28,6 +28,7 @@
 !.gitattributes
 !.npmrc
 !biome.json
+!codecov.yml
 !.editorconfig
 !.cursorrules
 !tsconfig.json
