@@ -68,13 +68,6 @@ justified infrastructure code.
 yarn add @ficsysfr/nestjs_module_factorydrive
 ```
 
-Or with another package manager:
-
-```bash
-npm install @ficsysfr/nestjs_module_factorydrive
-pnpm add @ficsysfr/nestjs_module_factorydrive
-```
-
 ## Development
 
 This repository uses Yarn, Vitest, TypeScript, and Biome:
@@ -331,9 +324,14 @@ Catch and map them in your service/controller layers as needed.
 
 ## AI Agent Skill
 
-This repository includes an English [`use-factorydrive`](.agents/skills/use-factorydrive/SKILL.md)
-skill for Codex and compatible coding agents. It teaches agents to explain, configure,
-audit, and implement Factorydrive without coupling business code to a storage provider.
+The npm package includes an Agent Skills pack at
+`node_modules/@ficsysfr/nestjs_module_factorydrive/agent-skills/public`. Installing the
+package with Yarn makes these two skill directories available to compatible coding
+agents; the package does not run an installer or copy skills during installation.
+
+The English [`use-factorydrive`](agent-skills/public/use-factorydrive/SKILL.md) skill
+teaches agents to explain, configure, audit, and implement Factorydrive without
+coupling business code to a storage provider.
 
 Example prompts:
 
@@ -344,7 +342,7 @@ Use $use-factorydrive to expose a verified local signed-download endpoint.
 ```
 
 Driver authors should use the separate
-[`factorydrive-driver`](.agents/skills/factorydrive-driver/SKILL.md) skill.
+[`factorydrive-driver`](agent-skills/public/factorydrive-driver/SKILL.md) skill.
 
 ## Documentation for AI agents
 

@@ -31,11 +31,37 @@ jobs:
             yarn.lock
             mcp/yarn.lock
 
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Checkout pinned Agent Skills specification
+        uses: actions/checkout@v7
+        with:
+          repository: agentskills/agentskills
+          ref: 69ef37e9424c0a7ea9dd2293b559e43ec8176379
+          path: .artifacts/agent-skills-spec
+
       - name: Install core dependencies
         run: yarn install --frozen-lockfile
 
       - name: Install MCP dependencies
         run: yarn mcp:install
+
+      - name: Install pinned Agent Skills validator
+        run: python -m pip install --disable-pip-version-check ./.artifacts/agent-skills-spec/skills-ref
+
+      - name: Validate Agent Skills
+        run: |
+          for skill in \
+            agent-skills/public/use-factorydrive \
+            agent-skills/public/factorydrive-driver \
+            agent-skills/maintenance/github-release \
+            agent-skills/maintenance/spec-driven
+          do
+            skills-ref validate "$skill"
+          done
 
       - name: Run Biome checks
         run: yarn lint:ci

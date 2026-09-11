@@ -17,17 +17,18 @@ installed in the consuming application before editing it.
 Install the core package for every setup:
 
 ```bash
-npm install @ficsysfr/nestjs_module_factorydrive
+yarn add @ficsysfr/nestjs_module_factorydrive
 ```
 
 Install a maintained satellite driver only when required:
 
 ```bash
-npm install @ficsysfr/nestjs_module_factorydrive-s3
-npm install @ficsysfr/nestjs_module_factorydrive-sftp
+yarn add @ficsysfr/nestjs_module_factorydrive-s3
+yarn add @ficsysfr/nestjs_module_factorydrive-sftp
 ```
 
-Use the consuming project's existing package manager rather than switching it.
+Use Yarn for the commands shown by this skill. If the consuming repository explicitly
+standardizes on another package manager, preserve that repository's convention.
 
 ## Configure the built-in local driver
 

@@ -9,8 +9,8 @@ d'abstraction de stockage fichiers. Il expose `FactorydriveModule`,
 `AbstractStorage` pour les drivers custom (ex. S3 via
 `@ficsysfr/nestjs_module_factorydrive-s3`).
 
-Les skills Codex / agents : [`.agents/skills/`](.agents/skills/). Les instructions
-courtes multi-agents : [`AGENTS.md`](AGENTS.md).
+Les skills Codex / agents ont leur source unique sous [`agent-skills/`](agent-skills/).
+Les instructions courtes multi-agents : [`AGENTS.md`](AGENTS.md).
 
 ---
 
@@ -49,7 +49,8 @@ nestjs_module_factorydrive/
 ├── mcp/                              # Serveur MCP documentaire ESM
 ├── tests/                            # Tests Vitest exécutés avec Yarn
 ├── docs/                             # VitePress bilingue + conventions
-├── .agents/skills/                   # Skills agents (commit, release, drivers…)
+├── agent-skills/                     # Sources publiques et de maintenance
+├── .agents/skill-sources.json        # Déclaration des racines pour adapters
 ├── .cursor/                          # Rules + commandes Cursor
 ├── samples/                          # Inspiration locale (git-ignoré)
 ├── specs/                            # Specs feature (optionnel, spec-kit lean)
@@ -119,7 +120,7 @@ Respecter strictement les conventions TypeScript et NestJS.
 - Tout nouveau driver étend `AbstractStorage` et s'enregistre via le manager.
 - Le driver `local` vit dans le package principal ; S3 et autres drivers dans des
   packages satellites (`@ficsysfr/nestjs_module_factorydrive-*`).
-- Voir le skill `.agents/skills/factorydrive-driver/SKILL.md`.
+- Voir le skill `agent-skills/public/factorydrive-driver/SKILL.md`.
 
 ---
 
@@ -136,7 +137,8 @@ Respecter strictement les conventions TypeScript et NestJS.
 - `samples/` : lecture seule pour inspiration (module LDAP, spec-kit, monorepos).
 - Ne pas installer leurs deps ni démarrer leurs services sauf demande explicite.
 - Patterns Docker / monorepo Turbo : s'inspirer de monorepos **sans** copier l'identité
-  du projet source (voir skill `sync-samples-patterns`).
+  du projet source. Le workflow générique `sync-samples-patterns` vient de l'adapter
+  local et n'est pas versionné dans ce dépôt.
 
 ---
 
@@ -151,4 +153,4 @@ Respecter strictement les conventions TypeScript et NestJS.
   versions suivantes utilisent npm Trusted Publishing / GitHub OIDC uniquement.
 - Toujours exécuter `yarn package:check` avant chaque release.
 - Le script `postbuild` génère les `.d.ts` et copie `README.md`, `LICENSE`, `package.json` dans `dist/`.
-- Préparation assistée : skill `.agents/skills/github-release/SKILL.md`.
+- Préparation assistée : skill `agent-skills/maintenance/github-release/SKILL.md`.

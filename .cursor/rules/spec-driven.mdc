@@ -13,4 +13,4 @@ alwaysApply: false
 4. Implémenter tâche par tâche en respectant `CLAUDE.md` et l'API publique via `src/index.ts`.
 
 La spec est la source de vérité. Signaler tout bump SemVer (breaking / feat) avant merge.
-Voir `.agents/skills/spec-driven/SKILL.md`.
+Voir `agent-skills/maintenance/spec-driven/SKILL.md`.

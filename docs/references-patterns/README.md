@@ -1,7 +1,8 @@
 # Patterns de référence (anonymisés)
 
 Fiches extraites de `samples/` via le skill
-[`.agents/skills/sync-samples-patterns`](../.agents/skills/sync-samples-patterns/SKILL.md).
+Le workflow générique `sync-samples-patterns` est fourni par l'adapter local et n'est
+pas versionné dans ce dépôt.
 
 Aucune fiche pour l'instant — lancer le skill après avoir peuplé `samples/`.
 

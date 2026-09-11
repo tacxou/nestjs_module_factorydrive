@@ -88,4 +88,3 @@ Read [signed-urls.md](references/signed-urls.md) when generating or serving sign
 If the task requires implementing a new `AbstractStorage` subclass, adding methods to a
 driver, changing driver registration internals, or publishing a satellite driver, stop
 using this workflow and use `factorydrive-driver`.
-

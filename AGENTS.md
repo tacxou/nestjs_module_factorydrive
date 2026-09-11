@@ -26,7 +26,9 @@ packages/nestjs_module_factorydrive-sftp/ # Driver SFTP (dépôt satellite)
 mcp/                         # Serveur MCP documentaire
 tests/                       # Tests Vitest exécutés avec Yarn
 docs/                        # Conventions et documentation agents
-.agents/skills/              # Skills réutilisables (source de vérité)
+agent-skills/public/         # Skills distribués avec le package npm
+agent-skills/maintenance/    # Workflows réservés à la maintenance du dépôt
+.agents/skill-sources.json   # Racines déclarées pour les adapters locaux
 .cursor/                     # Rules + commandes Cursor
 samples/                     # Références locales git-ignorées (inspiration)
 specs/                       # Specs feature (workflow spec-kit lean, optionnel)
@@ -54,17 +56,19 @@ Résumé :
 
 ## Skills
 
-Les workflows réutilisables vivent dans [`.agents/skills/`](.agents/skills/) :
+Les skills Factorydrive ont une source unique sous [`agent-skills/`](agent-skills/) :
 
 | Skill | Quand l'utiliser |
 |-------|------------------|
-| `commit-message` | Générer un message Conventional Commits + bump SemVer |
-| `github-issue-comment` | Brouillon de commentaire d'issue dans `.issues/{n}.md` |
-| `github-release` | Préparer une release npm exacte core/MCP ou satellite |
-| `sync-samples-patterns` | Extraire des patterns anonymisés depuis `samples/` |
-| `spec-driven` | Nouvelle feature via spec → plan → tasks (spec-kit lean) |
-| `use-factorydrive` | Expliquer, configurer ou intégrer Factorydrive dans une application NestJS |
-| `factorydrive-driver` | Ajouter ou étendre un driver de stockage |
+| `public/use-factorydrive` | Expliquer, configurer ou intégrer Factorydrive dans une application NestJS |
+| `public/factorydrive-driver` | Ajouter ou étendre un driver de stockage |
+| `maintenance/github-release` | Préparer une release npm exacte core/MCP ou satellite |
+| `maintenance/spec-driven` | Nouvelle feature via spec → plan → tasks (spec-kit lean) |
+
+Les workflows génériques `commit-message`, `github-issue-comment` et
+`sync-samples-patterns` sont fournis par les adapters Fysion et ne sont pas copiés dans
+ce dépôt. `.agents/skills/` et `.claude/skills/` sont des destinations de liens locales,
+jamais des sources versionnées.
 
 ## Workflow spec-driven (spec-kit lean)
 
@@ -74,13 +78,14 @@ Pour une feature non triviale :
 2. Dériver `plan.md` puis `tasks.md`
 3. Implémenter en respectant [`CLAUDE.md`](CLAUDE.md)
 
-Voir le skill [`.agents/skills/spec-driven/SKILL.md`](.agents/skills/spec-driven/SKILL.md).
+Voir le skill [`agent-skills/maintenance/spec-driven/SKILL.md`](agent-skills/maintenance/spec-driven/SKILL.md).
 
 ## Samples locaux
 
 `samples/` est **git-ignoré** : références d'inspiration uniquement (module NestJS
 bibliothèque, spec-kit, monorepos…). Ne jamais démarrer leurs serveurs ni
-les versionner. Pour capitaliser les patterns : skill `sync-samples-patterns`.
+les versionner. Pour capitaliser les patterns, utiliser le workflow
+`sync-samples-patterns` fourni par l'adapter local.
 
 ## Génération assistée Cursor
 

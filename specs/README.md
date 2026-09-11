@@ -6,5 +6,5 @@ Dossier optionnel pour les features non triviales. Workflow :
 2. `plan.md` — approche technique
 3. `tasks.md` — checklist d'implémentation
 
-Voir [`.agents/skills/spec-driven/SKILL.md`](../.agents/skills/spec-driven/SKILL.md)
+Voir [`agent-skills/maintenance/spec-driven/SKILL.md`](../agent-skills/maintenance/spec-driven/SKILL.md)
 et [`AGENTS.md`](../AGENTS.md).

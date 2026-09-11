@@ -14,7 +14,11 @@
 !changelog/
 !changelog/**
 !.agents/
-!.agents/**
+.agents/*
+!.agents/skill-sources.json
+.claude/
+!agent-skills/
+!agent-skills/**
 !.cursor/
 !.cursor/**
 !.issues/

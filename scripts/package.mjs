@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
@@ -10,12 +10,24 @@ const MCP_NAME = '@ficsysfr/nestjs_module_factorydrive-mcp'
 const REPOSITORY_URL = 'https://github.com/FicSysFR/nestjs_module_factorydrive.git'
 const BUGS_URL = 'https://github.com/FicSysFR/nestjs_module_factorydrive/issues'
 const MAX_PACKED_BYTES = 1024 * 1024
+export const CORE_PUBLIC_SKILL_FILES = [
+  'agent-skills/public/factorydrive-driver/SKILL.md',
+  'agent-skills/public/use-factorydrive/SKILL.md',
+  'agent-skills/public/use-factorydrive/agents/openai.yaml',
+  'agent-skills/public/use-factorydrive/references/configuration.md',
+  'agent-skills/public/use-factorydrive/references/drivers.md',
+  'agent-skills/public/use-factorydrive/references/operations.md',
+  'agent-skills/public/use-factorydrive/references/signed-urls.md',
+]
 const REQUIRED_FILES = {
-  [CORE_NAME]: ['LICENSE', 'README.md', 'dist/index.d.ts', 'dist/index.js', 'package.json'],
+  [CORE_NAME]: ['LICENSE', 'README.md', 'dist/index.d.ts', 'dist/index.js', 'package.json', ...CORE_PUBLIC_SKILL_FILES],
   [MCP_NAME]: ['LICENSE', 'README.md', 'dist/docs-client.js', 'dist/index.d.ts', 'dist/index.js', 'dist/tools.js', 'package.json'],
 }
-const FORBIDDEN_PATHS = /(?:^|\/)(?:\.env(?:\.|$)|\.git(?:\/|$)|\.npmrc$|\.tsbuildinfo$|node_modules(?:\/|$)|src(?:\/|$)|tests?(?:\/|$)|specs?(?:\/|$)|[^/]+\.(?:key|pem)$)/i
+const FORBIDDEN_PATHS =
+  /(?:^|\/)(?:\.agents?(?:\/|$)|\.claude(?:\/|$)|\.fysion(?:\/|$)|agent-skills\/maintenance(?:\/|$)|\.env(?:\.|$)|\.git(?:\/|$)|\.npmrc$|\.tsbuildinfo$|node_modules(?:\/|$)|src(?:\/|$)|tests?(?:\/|$)|specs?(?:\/|$)|[^/]+\.(?:key|pem)$)/i
 const ALLOWED_PATHS = /^(?:LICENSE|README\.md|package\.json|dist\/(?:LICENSE|README\.md|package\.json|.+\.(?:js|js\.map|d\.ts|d\.ts\.map)))$/
+const AGENT_RUNTIME_DEPENDENCY = /(?:^|[/_-])(?:agents?|agentic|skills?|fysion)(?:$|[/_-])/i
+const PUBLIC_SKILL_FORBIDDEN_TERMS = /\b(?:Bun|Jest|Fysion)\b/i
 
 function run(command, args, cwd, options = {}) {
   let resolvedCommand = command
@@ -56,6 +68,16 @@ export function validateManifestPair(coreManifest, mcpManifest) {
     throw new Error('MCP binary declaration is missing or incorrect')
   }
   if (mcpManifest.engines?.node !== '>=22.0.0') throw new Error('MCP must require Node >=22.0.0')
+  if (!coreManifest.files?.includes('agent-skills/public/**/*')) {
+    throw new Error('Core package must include the public Agent Skills pack')
+  }
+  for (const scriptName of ['preinstall', 'install', 'postinstall']) {
+    if (coreManifest.scripts?.[scriptName]) throw new Error(`Core package must not define a ${scriptName} lifecycle script`)
+  }
+  for (const dependencyGroup of ['dependencies', 'optionalDependencies']) {
+    const dependency = Object.keys(coreManifest[dependencyGroup] ?? {}).find((name) => AGENT_RUNTIME_DEPENDENCY.test(name))
+    if (dependency) throw new Error(`Core package contains agent runtime dependency ${dependency}`)
+  }
 }
 
 export function validatePackMetadata(pack) {
@@ -69,7 +91,7 @@ export function validatePackMetadata(pack) {
   }
   const forbidden = paths.find((path) => FORBIDDEN_PATHS.test(path))
   if (forbidden) throw new Error(`${pack.name} contains forbidden path ${forbidden}`)
-  const unexpected = paths.find((path) => !ALLOWED_PATHS.test(path))
+  const unexpected = paths.find((path) => !ALLOWED_PATHS.test(path) && !(pack.name === CORE_NAME && CORE_PUBLIC_SKILL_FILES.includes(path)))
   if (unexpected) throw new Error(`${pack.name} contains non-allowlisted path ${unexpected}`)
 }
 
@@ -89,18 +111,27 @@ async function sha256(path) {
     .digest('hex')
 }
 
+async function pathExists(path) {
+  try {
+    await access(path)
+    return true
+  } catch (error) {
+    if (error?.code === 'ENOENT') return false
+    throw error
+  }
+}
+
 async function auditInstalledTarballs(tarballs, projectRoot) {
   const temporaryRoot = await mkdtemp(join(tmpdir(), 'factorydrive-package-audit-'))
   try {
     await writeFile(join(temporaryRoot, 'package.json'), '{"name":"factorydrive-package-audit","private":true}')
     run(
-      'npm',
+      'yarn',
       [
-        'install',
+        'add',
         '--ignore-scripts',
-        '--no-audit',
-        '--no-fund',
-        '--legacy-peer-deps',
+        '--non-interactive',
+        '--no-progress',
         ...tarballs,
         '@nestjs/common@11',
         '@nestjs/core@11',
@@ -118,6 +149,15 @@ async function auditInstalledTarballs(tarballs, projectRoot) {
     const coreManifest = JSON.parse(await readFile(corePackage, 'utf8'))
     const mcpManifest = JSON.parse(await readFile(mcpPackage, 'utf8'))
     validateManifestPair(coreManifest, mcpManifest)
+
+    const installedCoreRoot = dirname(corePackage)
+    for (const path of CORE_PUBLIC_SKILL_FILES) {
+      const content = await readFile(join(installedCoreRoot, ...path.split('/')), 'utf8')
+      if (PUBLIC_SKILL_FORBIDDEN_TERMS.test(content)) throw new Error(`Installed public skill contains a forbidden term: ${path}`)
+    }
+    for (const path of ['agent-skills/maintenance', '.agents', '.claude', '.fysion']) {
+      if (await pathExists(join(installedCoreRoot, ...path.split('/')))) throw new Error(`Installed core contains forbidden path ${path}`)
+    }
 
     const binary = join(dirname(mcpPackage), 'dist', 'index.js')
     const source = await readFile(binary, 'utf8')

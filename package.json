@@ -33,6 +33,7 @@
   "files": [
     "dist/**/*",
     "!dist/.tsbuildinfo",
+    "agent-skills/public/**/*",
     "README.md",
     "LICENSE"
   ],
