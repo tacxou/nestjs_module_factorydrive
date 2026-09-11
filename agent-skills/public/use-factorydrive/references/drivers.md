@@ -15,7 +15,7 @@ configuration at the application bootstrap boundary.
 | `getSignedUrl` | Yes | Yes | No |
 | `verifySignedUrl` | Yes | No | No |
 
-"No" means the driver does not override the abstract fallback in its current
+"No" means the driver does not override the base-class fallback in its current
 implementation; calling it raises `MethodNotSupportedException`.
 
 ## Local

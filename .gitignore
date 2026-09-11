@@ -16,7 +16,7 @@
 !.agents/
 .agents/*
 !.agents/skill-sources.json
-.claude/
+.claude/skills/
 !agent-skills/
 !agent-skills/**
 !.cursor/

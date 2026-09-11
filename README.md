@@ -272,7 +272,7 @@ Then register it at startup:
 
 ```ts
 // app.module.ts
-import { Module, OnModuleInit } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { FactorydriveModule, FactorydriveService } from '@ficsysfr/nestjs_module_factorydrive'
 import { AwsS3Storage } from './aws-s3.storage'
 
@@ -291,11 +291,9 @@ import { AwsS3Storage } from './aws-s3.storage'
     }),
   ],
 })
-export class AppModule implements OnModuleInit {
-  public constructor(private readonly factorydrive: FactorydriveService) {}
-
-  public onModuleInit(): void {
-    this.factorydrive.registerDriver('s3', AwsS3Storage)
+export class AppModule {
+  public constructor(factorydrive: FactorydriveService) {
+    factorydrive.registerDriver('s3', AwsS3Storage)
   }
 }
 ```

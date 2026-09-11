@@ -61,7 +61,7 @@ when that makes the application intent clearer.
 | `getSignedUrl(location, options?)` | storage key and optional expiry | `Promise<SignedUrlResponse>` |
 | `verifySignedUrl(location, params)` | key, expiry, signature | `boolean` |
 
-These methods form the abstract contract, but a concrete driver may inherit an
+These methods form the base storage contract, but a concrete driver may inherit an
 unsupported implementation that throws `MethodNotSupportedException`. Check
 [drivers.md](drivers.md) before relying on optional methods.
 
